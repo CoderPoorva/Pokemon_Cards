@@ -283,6 +283,7 @@ pokemon-info {
 
   .cards {
     display: grid;
+    justify-content: center;
     align-items: center;
     grid-template-columns: 1fr; /* Single card per row */
     gap: 2rem;
@@ -293,7 +294,7 @@ pokemon-info {
   }
 
   .pokemon-card {
-    width: 80%; /* Adjust card width */
+    width: 100%; /* Adjust card width */
   }
 }
 
