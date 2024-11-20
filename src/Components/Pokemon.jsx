@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import PokemonCards from './PokemonCards';
 import './Pokemon.css';
+import Paginations from './Pagination';
+import { Pagination } from '@mui/material';
 
 
 const Pokemon = () => {
@@ -9,6 +11,10 @@ const Pokemon = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [search, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pokemonPerPage, setPokemonPerPage] = useState(4);
+
+ 
 
   const API = "https://pokeapi.co/api/v2/pokemon?limit=124";
 
@@ -32,18 +38,24 @@ const Pokemon = () => {
       setError(error);
     }
   };  
+
+  const lastPostIndex=pokemonPerPage*currentPage;
+  const firstPostIndex=lastPostIndex-pokemonPerPage;
+
+  const currentPokemon =pokemon.slice(firstPostIndex,lastPostIndex);
  
   useEffect(() => {
     fetchPokemon();
   },[]);
 
-  const searchData = pokemon.filter((curPokemon) =>
+  const searchData = currentPokemon.filter((curPokemon) =>
     curPokemon.name.toLowerCase().includes(search.toLowerCase())
   );
 
   if (loading) {
     return (
       <div>
+        
         <h1>Loading....</h1>
       </div>
     );
@@ -56,7 +68,7 @@ const Pokemon = () => {
       </div>
     );
   }
-
+  
 
   return (
     <>
@@ -72,15 +84,18 @@ const Pokemon = () => {
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
+      
       <div>
         <ul className="cards">
-          {searchData.map((curPokemon) => {
+          {searchData.map((currPokemon) => {
             return (
-              <PokemonCards key={curPokemon.id} pokemonData={curPokemon} />
+              <PokemonCards key={currPokemon.id} pokemonData={currPokemon} />
             );
           })}
         </ul>
       </div>
+      <Pagination count={Math.ceil(pokemon.length/pokemonPerPage) } color="secondary" />
+      <Paginations postPerPage={pokemonPerPage} totalData={pokemon.length} setCurrentPage={setCurrentPage} className='pagination'/>
     </section>
   </>
   )
