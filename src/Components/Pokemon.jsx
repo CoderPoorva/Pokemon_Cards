@@ -13,8 +13,10 @@ const Pokemon = () => {
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [pokemonPerPage, setPokemonPerPage] = useState(4);
+  const [allPokemon, setAllPokemon] = useState();
+  const [totalData, setTotalData] = useState(0);
 
- 
+
 
   const API = "https://pokeapi.co/api/v2/pokemon?limit=124";
 
@@ -22,40 +24,40 @@ const Pokemon = () => {
     try {
       const res = await fetch(API);
       const data = await res.json();
-      
-      const detailedPokemonData = data.results.map(async (curPokemon) => {
-        const res = await fetch(curPokemon.url);
-        const data = await res.json();
-        return data;
-      });
-      const detailedResponses = await Promise.all(detailedPokemonData);
-      // console.log(detailedResponses);
-      setPokemon(detailedResponses);
+      setAllPokemon(data);
+      setTotalData(data.results.length);
+
+      // const detailedPokemonData = data.results.map(async (curPokemon) => {
+      //   const res = await fetch(curPokemon.url);
+      //   const data = await res.json();
+      //   return data;
+      // });
+
+      // const detailedResponses = await Promise.all(detailedPokemonData);
+      // setPokemon(detailedResponses);
       setLoading(false);
     } catch (error) {
       console.log(error);
       setLoading(false);
       setError(error);
     }
-  };  
+  };
 
-  const lastPostIndex=pokemonPerPage*currentPage;
-  const firstPostIndex=lastPostIndex-pokemonPerPage;
+  const lastPostIndex = pokemonPerPage * currentPage;
+  const firstPostIndex = lastPostIndex - pokemonPerPage;
 
-  const currentPokemon =pokemon.slice(firstPostIndex,lastPostIndex);
- 
   useEffect(() => {
     fetchPokemon();
-  },[]);
+  }, []);
 
-  const searchData = currentPokemon.filter((curPokemon) =>
+  const searchData = pokemon.filter((curPokemon) =>
     curPokemon.name.toLowerCase().includes(search.toLowerCase())
   );
 
   if (loading) {
     return (
       <div>
-        
+
         <h1>Loading....</h1>
       </div>
     );
@@ -68,36 +70,36 @@ const Pokemon = () => {
       </div>
     );
   }
-  
+
 
   return (
     <>
-    <section className="container">
-      <header>
-        <h1> Lets Catch Pokémon</h1>
-      </header>
-      <div className="pokemon-search">
-        <input
-          type="text"
-          placeholder="search Pokemon"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-      </div>
-      
-      <div>
-        <ul className="cards">
-          {searchData.map((currPokemon) => {
-            return (
-              <PokemonCards key={currPokemon.id} pokemonData={currPokemon} />
-            );
-          })}
-        </ul>
-      </div>
-      <Pagination count={Math.ceil(pokemon.length/pokemonPerPage) } color="secondary" />
-      <Paginations postPerPage={pokemonPerPage} totalData={pokemon.length} setCurrentPage={setCurrentPage} className='pagination'/>
-    </section>
-  </>
+      <section className="container">
+        <header>
+          <h1> Lets Catch Pokémon</h1>
+        </header>
+        <div className="pokemon-search">
+          <input
+            type="text"
+            placeholder="search Pokemon"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
+
+        <div>
+          <ul className="cards">
+            {searchData.map((currPokemon) => {
+              return (
+                <PokemonCards key={currPokemon.id} pokemonData={currPokemon} />
+              );
+            })}
+          </ul>
+        </div>
+        <Pagination count={Math.ceil(pokemon.length / pokemonPerPage)} color="secondary" />
+        <Paginations setPokemon={setPokemon} allPokemon={allPokemon} firstPostIndex={firstPostIndex} lastPostIndex={lastPostIndex} postPerPage={pokemonPerPage} totalData={totalData} setCurrentPage={setCurrentPage} className='pagination' />
+      </section>
+    </>
   )
 }
 
