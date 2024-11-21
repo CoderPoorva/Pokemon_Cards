@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import PokemonCards from './PokemonCards';
 import './Pokemon.css';
-import Paginations from './Pagination';
 import { Pagination } from '@mui/material';
 
 
@@ -16,36 +15,57 @@ const Pokemon = () => {
   const [allPokemon, setAllPokemon] = useState();
   const [totalData, setTotalData] = useState(0);
 
-
-
   const API = "https://pokeapi.co/api/v2/pokemon?limit=124";
+
+  const lastPostIndex = pokemonPerPage * currentPage;
+  const firstPostIndex = lastPostIndex - pokemonPerPage;
+
+  const fetchPokemonDetails = async () => {
+    try {
+
+      const data = [];
+
+      //console.log(lastPostIndex);
+      
+      for(let i = firstPostIndex; i<lastPostIndex; i++){
+        const res = await fetch(allPokemon.results[i].url);
+        //console.log(res);
+        data.push(res.json());
+      }
+
+      const detailedResponses = await Promise.all(data);
+
+      //console.log(detailedResponses)
+
+      setPokemon(detailedResponses);
+    } catch (error) {
+
+    }
+  }
 
   const fetchPokemon = async () => {
     try {
       const res = await fetch(API);
       const data = await res.json();
       setAllPokemon(data);
+      //console.log(data);
       setTotalData(data.results.length);
-
-      // const detailedPokemonData = data.results.map(async (curPokemon) => {
-      //   const res = await fetch(curPokemon.url);
-      //   const data = await res.json();
-      //   return data;
-      // });
-
-      // const detailedResponses = await Promise.all(detailedPokemonData);
-      // setPokemon(detailedResponses);
       setLoading(false);
     } catch (error) {
-      console.log(error);
+      //console.log(error);
       setLoading(false);
       setError(error);
     }
+
   };
 
-  const lastPostIndex = pokemonPerPage * currentPage;
-  const firstPostIndex = lastPostIndex - pokemonPerPage;
+  useEffect(() => {
+    if (allPokemon) {
+      fetchPokemonDetails();
+    }
+  }, [currentPage, allPokemon]);
 
+  
   useEffect(() => {
     fetchPokemon();
   }, []);
@@ -71,6 +91,9 @@ const Pokemon = () => {
     );
   }
 
+  const onClickFunction = (event,value ) => {
+    setCurrentPage(value);
+  }
 
   return (
     <>
@@ -86,7 +109,6 @@ const Pokemon = () => {
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-
         <div>
           <ul className="cards">
             {searchData.map((currPokemon) => {
@@ -96,8 +118,7 @@ const Pokemon = () => {
             })}
           </ul>
         </div>
-        <Pagination count={totalData} color="secondary" />
-        <Paginations setPokemon={setPokemon} allPokemon={allPokemon} firstPostIndex={firstPostIndex} lastPostIndex={lastPostIndex} postPerPage={pokemonPerPage} totalData={totalData} setCurrentPage={setCurrentPage} className='pagination' />
+        <div className='pagination'><Pagination count={Math.ceil(totalData / pokemonPerPage)} page={currentPage} color="secondary" onChange={onClickFunction}/></div>
       </section>
     </>
   )

@@ -206,26 +206,26 @@ pokemon-info {
 }
 
 ::-webkit-scrollbar {
-  width: 6px; /* Adjust for vertical scrollbars */
-  height: 6px; /* Adjust for horizontal scrollbars */
+  width: 6px; 
+  height: 6px; 
 }
 
 ::-webkit-scrollbar-track {
-  background: lightblue; /* Light blue for the track */
+  background: lightblue; 
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgb(1, 1, 43); /* Dark blue for the thumb */
+  background: rgb(1, 1, 43); 
   border-radius: 3px;
-  border: 1px solid lightblue; /* Optional border for contrast */
+  border: 1px solid lightblue; 
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #0055aa; /* Slightly lighter dark blue on hover */
+  background: #0055aa; 
 }
 
-/* ///////////////////////////////////////// */
+
 .short-container {
   width: 65rem;
 
@@ -243,28 +243,19 @@ pokemon-info {
   }
 }
 
-.pageNumber{
-  display:inline-block;
+.pagination {
+  display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 3.2rem;
-  border-radius: 50%;
-  padding: 1rem;
-  margin: 2rem 0.5rem;
-  border: none;
-  background-color: #2ecc7000;
-
-  &:active{
-    background-color: #2ecc70;
-    color: #fff;
-  }
+  gap: 1em;
+  margin-top: 2em;
 }
 
 /* mobile responsive */
 
 @media (max-width: 568px) {
   html {
-    font-size: 55%; /* Smaller base font size */
+    font-size: 55%; 
   }
 
   h1 {
@@ -295,33 +286,22 @@ pokemon-info {
   }
   
   .grid-three-cols {
-    grid-template-columns:repeat(2, 1fr); /* Single column for smaller screens */
+    grid-template-columns:repeat(2, 1fr); 
   }
 
   .cards {
     display: grid;
     justify-content: center;
     align-items: center;
-    grid-template-columns: 1fr; /* Single card per row */
+    grid-template-columns: 1fr; 
     gap: 2rem;
   }
 
   input[type="text"] {
-    width: 80%; /* Adjust input width for mobile */
+    width: 80%; 
   }
 
   .pokemon-card {
-    width: 100%; /* Adjust card width */
+    width: 100%; 
   }
 }
-
-/* Tablets (max-width: 1024px) */
-/* @media (max-width: 1024px) {
-  .grid-three-cols {
-    grid-template-columns: repeat(2, 1fr); 
-  }
-
-  .cards {
-    grid-template-columns: repeat(2, 1fr); 
-}
-} */
