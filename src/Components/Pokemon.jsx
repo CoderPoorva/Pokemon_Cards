@@ -96,7 +96,7 @@ const Pokemon = () => {
             })}
           </ul>
         </div>
-        <Pagination count={Math.ceil(pokemon.length / pokemonPerPage)} color="secondary" />
+        <Pagination count={totalData} color="secondary" />
         <Paginations setPokemon={setPokemon} allPokemon={allPokemon} firstPostIndex={firstPostIndex} lastPostIndex={lastPostIndex} postPerPage={pokemonPerPage} totalData={totalData} setCurrentPage={setCurrentPage} className='pagination' />
       </section>
     </>
